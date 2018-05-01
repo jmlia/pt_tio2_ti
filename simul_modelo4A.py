@@ -81,8 +81,8 @@ def generar_IV(V, A, n, R, I_0, b):
 
 #%% Generamos voltajes y corrientes
     
-A = 0.3e0
-n = 3     # este queda fijo, solo lo pongo acá para que aparezca en los labels
+A = 0.4e0
+n = 3
 R = 4.3e0
 I_0 = 1.77e0
 b = 0.01e-1
