@@ -4,13 +4,12 @@
 LBT
 Martín & José
 
-Script para el ajuste de IV simulando el circuito del modelo 4B (dos diodos
-Schottky con resistencias en serie, en paralelo con una resistencia y un 
-elemento SCLC)
+Script para el ajuste de IV simulando el circuito del modelo 4A (dos diodos
+Schottky en paralelo con una rama con una resistencia y un elemento SCLC)
 
 Este programa hace un ajuste de los datos de la muestra amorfa a 300K, 
 utilizando como función de ajuste 'generar_IV', definida en el script 
-simul_modelo4B. Como parámetros iniciales, se utilizan los guess_param, 
+simul_modelo4A. Como parámetros iniciales, se utilizan los guess_param, 
 definidos en ese mismo script. 
 
 
@@ -20,13 +19,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from funciones_gamma import gamma_sin
-from simul_modelo4B import generar_IV, guess_param, n
+from simul_modelo4A import generar_IV, guess_param
 
 from gammas_amorfa_sinplot import Vp_bajada300, Ip_bajada300
 
 from gammas_amorfa_sinplot import Vs_bajada300_mas, gamma_filt_bajada300_mas
 
-muestra = 'Circuito Modelo 4B'
+muestra = 'Circuito Modelo 4A'
 
     
 #%%
@@ -54,7 +53,8 @@ Vs = np.abs(V)**exponente
 
 #%%
 
-params = ' $A = {0}$\n $R = {1}$\n $I_0 = {2:.2E}$\n $b = {3}$\n $R_b = {4}$\n $n = {5}$'.format(*popt, n)
+params = ' $A = {0}$\n $n = {1}$\n $R = {2:.2E}$\n $I_0 = {3:.2E}$\n $b = {4}$\n $'.format(*popt)
+
 
 plt.figure()
 plt.subplot(1,2,1)
