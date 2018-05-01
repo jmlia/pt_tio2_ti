@@ -38,7 +38,7 @@ temps_subida2 = [130] # idem estos que tienen menos valores
 
 #path = 'C:\\Users\\usuario\\Documents\\Usuarios\\Martin_Jose\\Labo 7\\datos\\muestra\\amorfa\\' 
 #path = 'D:\\martin\\Documents\\FCEN\\Labo7\\datos\\muestra\\amorfa\\' 
-path = 'amorfa/'
+path = '../datos/muestra/amorfa/'
 archivo_bajada = 'Pt_TiO2_Ti_9B_14_{:d}.00K_IV_08_11_20_42_54.txt'
 archivo_subida = 'Pt_TiO2_Ti_9B_14_{:d}.00K_IV_09_11_13_26_50.txt'
 
