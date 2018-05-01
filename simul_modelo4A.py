@@ -83,7 +83,7 @@ def generar_IV(V, A, n, R, I_0, b):
     
 A = 0.4e0
 n = 3
-R = 4.3e0
+R = 6e0
 I_0 = 1.77e0
 b = 0.01e-1
 
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     #%% Ploteo de la curva IV y del gamma
     
     
-    params = ' $A = {0}$\n $R = {1}$\n $I_0 = {2:.2E}$\n $b = {3}$\n $R_b = {4}$\n $n = {5}$'.format(*guess_param, n)
+    params = ' $A = {0}$\n $n = {1}$\n $R = {2:.2E}$\n $I_0 = {3:.2E}$\n $b = {4}$\n $'.format(*guess_param)
     
     plt.figure()
     plt.subplot(1,2,1)
