@@ -62,7 +62,7 @@ def Residual(params, x, data):
     return (data - model)
 
 minner = lmf.Minimizer(Residual, params, fcn_args = (x_data, y_data), nan_policy = 'omit')
-result = minner.minimize(maxfev = 100)
+result = minner.minimize(maxfev = 150)
 
 V = np.linspace(V_bot, V_top, 1000)
 I = generar_IV(V, result.params["A"], result.params["R"], result.params["I0"],
@@ -77,8 +77,7 @@ Vs = np.abs(V)**exponente
 
 #%%
 
-params = ''
-# params = ' $A = {0}$\n $R = {1}$\n $I_0 = {2:.2E}$\n $b = {3}$\n $R_b = {4}$\n $n = {5}$'.format(result.params["A"].value, result.params["R"].value, result.params["I0"].value, result.params["b"].value, result.params["Rb"].value, result.params["n"].value)
+params = ' $A = {0:.2E}$\n $R = {1:.2E}$\n $I_0 = {2:.2E}$\n $b = {3:.2E}$\n$n = {4}$'.format(result.params["A"].value, result.params["R"].value, result.params["I0"].value, result.params["b"].value, result.params["n"].value)
 
 fig, (ax_1, ax_2) = plt.subplots(1,2)
 
@@ -88,6 +87,7 @@ ax_1.set_xlabel('$V$', fontsize = 15)
 ax_1.set_ylabel('$I$', fontsize = 15)
 #ax_1.title(muestra + ': curva IV', fontsize = 15)
 ax_1.legend()
+ax_1.grid()
 
 ax_2.plot(Vs, gamma, color = 'r', label = 'ajuste\n'+params)
 ax_2.plot(Vs_bajada300_mas, gamma_filt_bajada300_mas, 'c-.', label = 'datos a 300K')
@@ -95,8 +95,9 @@ ax_2.set_xlabel('$|V|^{%.1f}$'%exponente, fontsize = 15)
 ax_2.set_ylabel('$\\gamma$', fontsize = 15)
 #plt.title(muestra + ': curva $\\gamma$', fontsize = 15)
 ax_2.legend()
+ax_2.grid()
 
-fig.savefig('file.pdf', format = 'pdf')
-fig.savefig('file.png', format = 'png')
+fig.savefig('ajustes preliminares/fit_modelo4A_lmfit_{0:d}.pdf'.format(result.params["n"].value), format = 'pdf')
+fig.savefig('ajustes preliminares/fit_modelo4A_lmfit_{0:d}.png'.format(result.params["n"].value), format = 'png')
 
 
