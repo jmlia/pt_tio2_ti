@@ -34,11 +34,10 @@ import lmfit as lmf
 V_bot = 0.0
 V_top = 1.2
 
-mask = Vp_bajada300['300'] > 0 
+mask = (Vp_bajada300['300'] > V_bot) * (Vp_bajada300['300'] < V_top)
 
 x_data = np.asarray(Vp_bajada300[mask]).ravel()
 y_data = np.asarray(Ip_bajada300[mask]).ravel()
-
 
 # En lugar de usar curve_fit, intentemos usar lmfit
 #popt, pcov = curve_fit(generar_IV, x_data, y_data, p0 = guess_param)
@@ -47,7 +46,7 @@ y_data = np.asarray(Ip_bajada300[mask]).ravel()
 
 params = lmf.Parameters()
 params.add("A", value = 0.4)
-params.add("n", min = 0, value = 3)
+params.add("n", min = 0, value = 4, vary = False)
 params.add("R", min = 0.0, value = 6.0)
 params.add("I0", value = 1.77)
 params.add("b", value = 0.001)
@@ -63,7 +62,7 @@ def Residual(params, x, data):
     return (data - model)
 
 minner = lmf.Minimizer(Residual, params, fcn_args = (x_data, y_data), nan_policy = 'omit')
-result = minner.minimize()
+result = minner.minimize(maxfev = 100)
 
 V = np.linspace(V_bot, V_top, 1000)
 I = generar_IV(V, result.params["A"], result.params["R"], result.params["I0"],
@@ -98,4 +97,6 @@ ax_2.set_ylabel('$\\gamma$', fontsize = 15)
 ax_2.legend()
 
 fig.savefig('file.pdf', format = 'pdf')
+fig.savefig('file.png', format = 'png')
+
 
