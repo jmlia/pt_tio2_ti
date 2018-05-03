@@ -31,7 +31,7 @@ import lmfit as lmf
 
 #%%
 
-V_bot = 0.0
+V_bot = 0.4
 V_top = 1.2
 
 mask = (Vp_bajada300['300'] > V_bot) * (Vp_bajada300['300'] < V_top)
@@ -46,7 +46,7 @@ y_data = np.asarray(Ip_bajada300[mask]).ravel()
 
 params = lmf.Parameters()
 params.add("A", value = 0.4)
-params.add("n", min = 0, value = 4, vary = False)
+params.add("n", min = 0, value = 2, vary = False)
 params.add("R", min = 0.0, value = 6.0)
 params.add("I0", value = 1.77)
 params.add("b", value = 0.001)
