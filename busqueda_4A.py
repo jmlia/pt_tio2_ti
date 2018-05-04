@@ -33,9 +33,16 @@ arr_n = np.arange(start = 1, stop = 6)
 arr_R = np.linspace(start = 1, stop = 1000, num = 1000)
 arr_I0 = np.linspace(start = 1.0, stop = 10, num = 1000)
 arr_b = np.linspace(start = 0.001, stop = 1, num = 1000)
-i = 1
+
+i = 0
 minres = np.finfo('d').max
-mini = -1
+
+# Mínimos.
+min_A = -1
+min_n = -1
+min_R = -1
+min_I0 = -1
+min_b = -1
 
 output = 'Iteración {0:d}\n\tA = {1:.3E}\n\tn = {2:d}\n\tR = {3:.3E}' \
          '\n\tI0 = {4:.3E}\n\tb = {5:.3E}\nResiduales: {6:.7f}\n\n'
@@ -50,9 +57,22 @@ for A in arr_A:
 
                     if res < minres:
                         minres = res
-                        mini = i
-
+                        min_A = A
+                        min_n = n
+                        min_R = R
+                        min_I0 = I0
+                        min_b = b
+          
                     print(output.format(i, A, n, R, I0, b, res))
                     i += 1
 
-print('Mínimo alcanzado en la iteración {0:d}: {1:.7f}'.format(mini, minres))
+print('Mínimo alcanzado de suma |y_i - model_i| = {0:.7f}'.format(minres))
+
+# Esto debería graficar...
+
+# plt.figure()
+# plt.subplots(1,1,1)
+# plt.plot(x_data, y_data, 'o', label = 'Data')
+# plt.plot(x_data, generar_IV(x_data, min_A, min_n, min_R, min_I0, min_b), '-', label = 'Ajuste')
+# plt.grid(True)
+# plt.show()
