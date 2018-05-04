@@ -66,7 +66,7 @@ for A in arr_A:
                     print(output.format(i, A, n, R, I0, b, res))
                     i += 1
 
-print('Mínimo alcanzado de suma |y_i - model_i| = {0:.7f}'.format(minres))
+print('Mínimo alcanzado de suma |y_i - model_i| = {0:.7f}\n\tA = {1:.5f}\n\tn = {2:d}\n\tR = {3:.5f}\n\tI0 = {4:.5f}\n\tb = {5:.5f}\n'.format(minres, min_A, min_n, min_R, min_I0, min_b))
 
 # Esto debería graficar...
 
