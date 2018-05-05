@@ -28,11 +28,13 @@ y_data = np.asarray(Ip_bajada300[mask]).ravel()
 # I0;    debería andar en uA, que son 10^-3 mA.
 # b > 0 (?)
 
-arr_A = np.linspace(start = 0.1, stop = 10, num = 1000, endpoint = True)
+divisions = 5
+
+arr_A = np.linspace(start = 0.1, stop = 10, num = divisions, endpoint = True)
 arr_n = np.arange(start = 1, stop = 6)
-arr_R = np.linspace(start = 1, stop = 1000, num = 1000)
-arr_I0 = np.linspace(start = 1.0, stop = 10, num = 1000)
-arr_b = np.linspace(start = 0.001, stop = 1, num = 1000)
+arr_R = np.logspace(start = 1, stop = 4, num = divisions)
+arr_I0 = np.logspace(start = 1.0, stop = -5, num = divisions)
+arr_b = np.linspace(start = 0.001, stop = 1, num = divisions)
 
 i = 0
 minres = np.finfo('d').max
@@ -79,12 +81,12 @@ Vs = np.abs(x_data)**exponente
 #Esto debería graficar...
 
 plt.figure()
-plt.subplots(1,2,1)
+plt.subplot(1,2,1)
 plt.plot(x_data, y_data, 'o', label = 'Data')
 plt.plot(x_data, fit, '-', label = 'Ajuste')
 plt.grid(True)
 
-plt.subplots(1,2,2)
+plt.subplot(1,2,2)
 plt.plot(Vs_bajada300_mas, gamma_filt_bajada300_mas, 'o', label = 'Data')
 plt.plot(Vs, gamma_fit, '-', label = 'Ajuste')
 plt.grid(True)
