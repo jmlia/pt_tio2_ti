@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from funciones_gamma import gamma_sin
-from simul_modelo4A import generar_IV, guess_param, n
+from simul_modelo4A import generar_IV
 from gammas_amorfa_sinplot import Vp_bajada300, Ip_bajada300
 from gammas_amorfa_sinplot import Vs_bajada300_mas, gamma_filt_bajada300_mas
 
@@ -68,11 +68,24 @@ for A in arr_A:
 
 print('Mínimo alcanzado de suma |y_i - model_i| = {0:.7f}\n\tA = {1:.5f}\n\tn = {2:d}\n\tR = {3:.5f}\n\tI0 = {4:.5f}\n\tb = {5:.5f}\n'.format(minres, min_A, min_n, min_R, min_I0, min_b))
 
-# Esto debería graficar...
+# Cáclculo de gamma
 
-# plt.figure()
-# plt.subplots(1,1,1)
-# plt.plot(x_data, y_data, 'o', label = 'Data')
-# plt.plot(x_data, generar_IV(x_data, min_A, min_n, min_R, min_I0, min_b), '-', label = 'Ajuste')
-# plt.grid(True)
-# plt.show()
+fit = generar_IV(x_data, min_A, min_n, min_R, min_I0, min_b)
+gamma_fit = gamma_sin(x_data, fit)
+
+exponente = 0.5
+Vs = np.abs(x_data)**exponente
+
+#Esto debería graficar...
+
+plt.figure()
+plt.subplots(1,2,1)
+plt.plot(x_data, y_data, 'o', label = 'Data')
+plt.plot(x_data, fit, '-', label = 'Ajuste')
+plt.grid(True)
+
+plt.subplots(1,2,2)
+plt.plot(Vs_bajada300_mas, gamma_filt_bajada300_mas, 'o', label = 'Data')
+plt.plot(Vs, gamma_fit, '-', label = 'Ajuste')
+plt.grid(True)
+plt.show()
