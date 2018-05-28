@@ -57,6 +57,10 @@ for temp in temps_subida:
 # Ahora una Dataframe con los datos de todas las temperaturas juntos
 
 temperaturas_todas = sorted(temps_bajada + temps_subida, reverse = True)
+
+# Los de 100K tienen un switcheo medio violento, los descartamos
+del temperaturas_todas[-2:]
+
 Vp_todas = pd.DataFrame({})
 Ip_todas = pd.DataFrame({})
 
@@ -83,22 +87,42 @@ for temp in temperaturas_todas:
     Ip_todas[key] = Ip_todas[key][imax:]
     Vp_todas[key] = Vp_todas[key][imax:]
 
-logI = np.log(np.abs(Ip_todas))
+# Para la de 300K tengo que depurar un cacho más porque la I tiene una discontinuidad
+
+index = 1496
+
+Ip_todas['300'] = Ip_todas['300'][index:]
+Vp_todas['300'] = Vp_todas['300'][index:]
+
 
 #%% Graficamos las IVs
         
 plt.figure()
 for temp in temperaturas_todas:
+    
     key = '{:d}'.format(temp)
-    plt.semilogy(Vp_todas[key], Ip_todas[key], label = '{:d} K'.format(temp))
+    plt.plot(Vp_todas[key], Ip_todas[key], label = '{:d} K'.format(temp))
 
 plt.xlabel('Voltaje (V)', fontsize = 15)
 plt.ylabel('Corriente (mA)', fontsize = 15)
-plt.title(muestra + ' bajada de temperatura', fontsize = 15)
+plt.title(muestra, fontsize = 15)
 plt.legend()
 plt.grid(True)
 
 
+plt.figure()
+for temp in temperaturas_todas:
+    
+    key = '{:d}'.format(temp)
+    mask = Vp_todas[key] > 0
+    
+    plt.semilogy(Vp_todas[key][mask], np.abs(Ip_todas[key][mask]), label = '{:d} K'.format(temp))
+
+plt.xlabel('Voltaje (V)', fontsize = 15)
+plt.ylabel('Log Corriente (mA)', fontsize = 15)
+plt.title(muestra, fontsize = 15)
+plt.legend()
+plt.grid(True)
 
 
 
