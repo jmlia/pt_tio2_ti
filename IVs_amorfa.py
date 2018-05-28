@@ -17,6 +17,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from funciones_gamma import central
+
 #%%
 # Importamos todos los datos para trabajar. Se hace una DataFrame para cada 
 # temperatura con todas las mediciones de la curva IV, y luego una DataFrame
@@ -125,9 +127,57 @@ plt.legend()
 plt.grid(True)
 
 
+#%% Ahora hago la extrapolación lineal al final de cada curva
 
 
 
+def tangent(x, y, i):
+    """
+    Devuelve la recta tangente a la curva y(x) correspondiente a la posición
+    dada por el indice i.
+    La fórmula es la siguiente:
+    
+    r_x0 (x) = y'(x_0)(x - x_0) + y(x_0)
+    
+    Devuelve la función que a cada x le hace corresponder el valor de la recta 
+    tangente al punto en cuestión.
+    """
+    
+    m = central(x, y)[i]
+    
+    x_0 = x[i]
+    y_0 = y[i]
+    
+    tangente = lambda x: m*(x - x_0) + y_0
+
+    return tangente
+
+def extrapole(x, y, reach):
+    """
+    Devuelve la extrapolación lineal de la función y(x).
+    
+    Toma un intervalo de valores desde x_max hacia atrás, dado por los índices
+    desde el que corresponda a x_max (i_max) hasta i_max + reach. (Teneindo
+    en cuenta que el array de tensiones (x) está ordenado de forma decreciente)
+    
+    Hace y devuelve el ajuste lineal que corresponde a los datos de y(x) en 
+    ese intervalo.
+    
+    """
+    
+    i_max = np.argmax(x)
+    
+    x_data = x[i_max : imax + reach]
+    y_data = y[i_max : imax + reach]
+    
+    linear = lambda x, m, b: m*x + b
+
+    m, b = np.polyfit(x_data, y_data, deg = 1)
+    extrap = lambda x: linear(x,m,b)
+
+    return extrap
+
+    
 
 
 
