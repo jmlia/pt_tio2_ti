@@ -61,7 +61,8 @@ for temp in temps_subida:
 temperaturas_todas = sorted(temps_bajada + temps_subida, reverse = True)
 
 # Los de 100K tienen un switcheo medio violento, los descartamos
-del temperaturas_todas[-2:]
+# el de 130K también
+del temperaturas_todas[-3:]
 
 Vp_todas = pd.DataFrame({})
 Ip_todas = pd.DataFrame({})
@@ -99,38 +100,38 @@ Vp_todas['300'] = Vp_todas['300'][index:]
 
 #%% Graficamos las IVs
         
-plt.figure()
-for temp in temperaturas_todas:
-    
-    key = '{:d}'.format(temp)
-    plt.plot(Vp_todas[key], Ip_todas[key], label = '{:d} K'.format(temp))
-
-plt.xlabel('Voltaje (V)', fontsize = 15)
-plt.ylabel('Corriente (mA)', fontsize = 15)
-plt.title(muestra, fontsize = 15)
-plt.legend()
-plt.grid(True)
-
-
-plt.figure()
-for temp in temperaturas_todas:
-    
-    key = '{:d}'.format(temp)
-    mask = Vp_todas[key] > 0
-    
-    plt.semilogy(Vp_todas[key][mask], np.abs(Ip_todas[key][mask]), label = '{:d} K'.format(temp))
-
-plt.xlabel('Voltaje (V)', fontsize = 15)
-plt.ylabel('Log Corriente (mA)', fontsize = 15)
-plt.title(muestra, fontsize = 15)
-plt.legend()
-plt.grid(True)
+#plt.figure()
+#for temp in temperaturas_todas:
+#    
+#    key = '{:d}'.format(temp)
+#    plt.plot(Vp_todas[key], Ip_todas[key], label = '{:d} K'.format(temp))
+#
+#plt.xlabel('Voltaje (V)', fontsize = 15)
+#plt.ylabel('Corriente (mA)', fontsize = 15)
+#plt.title(muestra, fontsize = 15)
+#plt.legend()
+#plt.grid(True)
+#
+#
+#plt.figure()
+#for temp in temperaturas_todas:
+#    
+#    key = '{:d}'.format(temp)
+#    mask = Vp_todas[key] > 0
+#    
+#    plt.semilogy(Vp_todas[key][mask], np.abs(Ip_todas[key][mask]), label = '{:d} K'.format(temp))
+#
+#plt.xlabel('Voltaje (V)', fontsize = 15)
+#plt.ylabel('Log Corriente (mA)', fontsize = 15)
+#plt.title(muestra, fontsize = 15)
+#plt.legend()
+#plt.grid(True)
 
 
 #%% Ahora hago la extrapolación lineal al final de cada curva
 
 
-
+# esta al final no la usamos, seguimos con extrapolate
 def tangent(x, y, i):
     """
     Devuelve la recta tangente a la curva y(x) correspondiente a la posición
@@ -152,7 +153,7 @@ def tangent(x, y, i):
 
     return tangente
 
-def extrapole(x, y, reach):
+def extrapolate(x, y, reach):
     """
     Devuelve la extrapolación lineal de la función y(x).
     
@@ -167,8 +168,9 @@ def extrapole(x, y, reach):
     
     i_max = np.argmax(x)
     
-    x_data = x[i_max : imax + reach]
-    y_data = y[i_max : imax + reach]
+    
+    x_data = x[i_max : i_max + reach]
+    y_data = y[i_max : i_max + reach]
     
     linear = lambda x, m, b: m*x + b
 
@@ -177,11 +179,52 @@ def extrapole(x, y, reach):
 
     return extrap
 
+
+#%% Grafico las IV con sus extrapolaciones juntas
+
+plt.figure()
+
+for temp in temperaturas_todas:
     
+    key = '{:d}'.format(temp)
+    p = plt.plot(Vp_todas[key], Ip_todas[key], label = '{:d} K'.format(temp))
+    col = p[0].get_color()
+    
+    lin_extra = extrapolate(Vp_todas[key], Ip_todas[key], 200)
+    
+    V_extra = np.linspace(np.max(Vp_todas[key]), 1.6, 100)
+    I_extra = lin_extra(V_extra)
+    
+    plt.plot(V_extra, I_extra, '--', color = col) 
 
+plt.xlabel('Voltaje (V)', fontsize = 15)
+plt.ylabel('Corriente (mA)', fontsize = 15)
+plt.title(muestra + ' IVs con extrapolaciones', fontsize = 15)
+plt.legend()
+plt.grid(True)
 
+plt.figure()
+for temp in temperaturas_todas:
+    
+    key = '{:d}'.format(temp)
+    mask = Vp_todas[key] > 0
+    
+    p = plt.semilogy(Vp_todas[key][mask], np.abs(Ip_todas[key][mask]), label = '{:d} K'.format(temp))
+    
+    col = p[0].get_color()
+    
+    lin_extra = extrapolate(Vp_todas[key], Ip_todas[key], 200)
+    
+    V_extra = np.linspace(np.max(Vp_todas[key]), 1.6, 100)
+    I_extra = lin_extra(V_extra)
+    
+    plt.semilogy(V_extra, I_extra, '--', color = col) 
 
-
+plt.xlabel('Voltaje (V)', fontsize = 15)
+plt.ylabel('Log Corriente (mA)', fontsize = 15)
+plt.title(muestra, fontsize = 15)
+plt.legend()
+plt.grid(True)
 
 
 
